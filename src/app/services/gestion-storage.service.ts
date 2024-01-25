@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Preferences } from '@capacitor/preferences';
-import { Preguntas } from "./../interfaces/interfaces";
+import { pregunta } from "./../interfaces/interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class GestionStorageService {
   // A partir de su clave obtiene un objeto almacenado en local
   // Antes de devolverlo, debe ser convertido de formato JSON a formato normal
   // Preguntas[] dependerá de lo que se haya puesto en la interface
-  async getObject(key: string): Promise<Preguntas[]> {
+  async getObject(key: string): Promise<pregunta[]> {
     const ret: any = await Preferences.get({ key });
     return JSON.parse(ret.value);
   }

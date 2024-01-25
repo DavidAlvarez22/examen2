@@ -4,12 +4,25 @@
       TRIVIA
     </ion-title>
     <!-- Añadir ion-segment-->
+
+    <ion-segment scrollable [value]="categorias[0]" (ionChange)="cambiarCategoria($event)">
+      <ion-segment-button [value]="categoria" *ngFor="let categoria of categorias">
+        <ion-label>{{categoria}}</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+     
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding" [fullscreen]="true">
-  <!-- Gestionar el control para mostrar un componente u otro. 
-    -- Utilizaremos un ion-card por cada componente.
-    -->
+  <app-introduccion *ngIf= "selectedSegment == 'introduccion'"
+  [titulo] = "titulo"
+  [descripcion]= "descripcion"
+  [url]= "url"></app-introduccion>
+<app-preguntas *ngIf= "selectedSegment == 'preguntas'"></app-preguntas>
+<app-ranking *ngIf= "selectedSegment == 'estadistica'"></app-ranking>
+
+
+    
 </ion-content>
 

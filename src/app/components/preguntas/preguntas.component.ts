@@ -1,4 +1,8 @@
+import { HttpClient } from '@angular/common/http';
+import { RootObject, pregunta } from './../../interfaces/interfaces';
 import { Component, OnInit } from '@angular/core';
+import { GestionStorageService } from 'src/app/services/gestion-storage.service';
+import { Observable } from 'rxjs';
 //Añadir los imports necesarios
 
 @Component({
@@ -11,7 +15,7 @@ export class PreguntasComponent implements OnInit {
   /*Podéis hacer uso de estas variables de referencia, modificarlas o incluso crear más si véis necesario*/
 
   //Guardar la lista de todas las preguntas. Preguntas[] dependerá de lo que se haya puesto en la interface
-  listaPreguntas: Preguntas[] = [];
+  listaPreguntas: pregunta[] = [];
   //Guardará todas las respuestas que se han elegido
   respuestasSeleccionadas: string[] = [];
   //Guardará las respuestas con el orden aleatorio
@@ -23,16 +27,27 @@ export class PreguntasComponent implements OnInit {
   //Gestionará el visualizado del botón Volver a Jugar.
   mostrarBotonesAdicionales: boolean = false;
 
-  constructor() {}
+  constructor(private http : HttpClient,private almacen : GestionStorageService) {
+    this.cargarPreguntas();
+  }
 
   ngOnInit() {
 
   }
+    getPreguntas(){
+    return this.listaPreguntas; 
+  }
 
   private cargarPreguntas() {
     //Llamamos al API mediante un observable
-    
+    let buscar : Observable <RootObject> = this.http.get<RootObject> ("https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple");
     //Suscripción al observable
+
+    buscar.subscribe (datos =>{
+      this.listaPreguntas.push(...datos.results);
+
+    }
+    )
  
       //Recorremos la lista de preguntas
 
@@ -40,12 +55,12 @@ export class PreguntasComponent implements OnInit {
          * Creamos un array con los 3 valores que vienen en "incorrect_answer" + la "correct_answer".
          * Si vemos la interface, podemos observar que --> correct_answer: string; incorrect_answers: string[];
         */
-        const respuestasAleatorias = this.mezclarOrdenArray([...pregunta.incorrect_answers, pregunta.correct_answer]);
+       // const respuestasAleatorias = this.mezclarOrdenArray([...pregunta.incorrect_answers, pregunta.correct_answer]);
         /* Modificamos la interface para que pueda guardar un string[] de las respuestas ordenadas aleatoriamente.
          * Con los valores que vienen en la API, rellenamos pregunta y a ello le añadimos respuestasAleatorias, para que 
          * todos los valores de la interface estén rellenas.
          */
-        return { ...pregunta, respuestasAleatorias };
+       // return { ...pregunta, respuestasAleatorias };
 
 
   }
